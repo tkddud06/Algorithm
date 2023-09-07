@@ -46,37 +46,39 @@
 # n, k = map(int,input().split())
 # n = pow(n,k)
 # print(n%20091024)
-#
+
 # import sys
 #
-# n = int(input())
-# m = int(input())
+# n = int(sys.stdin.readline().strip())
+# m = int(sys.stdin.readline().strip())
 # middle_set = set()
 # inst = []
 # inst_what = []
-# for i in range(m):
-#     x,y,k = map(int,sys.stdin.readline().strip().split())
+# for i in range(0, m):
+#     x,y,k = map(int, sys.stdin.readline().strip().split())
 #     middle_set.add(x)
 #     inst_what.append(x)
-#     inst.append((x,y,k))
+#     inst.append([x,y,k])
 #
 # middle_how = list(middle_set)
 # middle_how.sort(reverse=True)
-# middle_how_backup = middle_how.copy()
+# middle_how_backup = middle_how[:]
 # made = {}
-# for i in range(1,n+1):
+# for i in range(1, n+1):
 #     made[i] = 0
 # while len(middle_how):
-#     i = middle_how[0]
-#     middle_how.pop(0) # 777 이 있을때 두번쨰꺼가 가장 큰거에 참조하도록
+#     p = middle_how[0]
+#     middle_how.pop(0)
 #     inst_temp = []
 #     while 1:
 #         try:
-#             inst_temp.append(inst[inst_what.index(i)])
+#             inst_temp.append(inst[inst_what.index(p)])
 #         except:
 #             break
-#         inst.pop(inst_what.index(i))
-#         inst_what.remove(i)
+#
+#         inst.pop(inst_what.index(p))
+#         inst_what.remove(p)
+#
 #     inst_tempd = list(sorted(inst_temp, key=lambda z: z[1], reverse=True))
 #     while inst_tempd:
 #         if made[inst_tempd[0][0]] > 0:
@@ -87,8 +89,10 @@
 #             inst_tempd.pop(0)
 #
 # ma = min(middle_how_backup)
-# for i in range(1,ma):
-#     print(f"{i} {made[i]}")
+# for p in range(1,ma):
+#     print(f"{p} {made[p]}")
+
+# 왜 디버그시에만 정상 작동하냐?????????????????????????????????????????
 
 from collections import deque
 
@@ -101,18 +105,19 @@ man_list = [0 for i in range(n)]
 
 man_list = deque(man_list)
 
-i = 0
+z = 0
 while a.count(0) < k:
-    i += 1
+    z += 1
     a.rotate(1)
     man_list.rotate(1)
-    if a[0] > 0:
-        man_list[0] = 1
-        a[0] -= 1
-    man_list[n-1] = 0
-    for i in range(n-2,0, -1):
-        if a[i] > 0 and man_list[i+1] == 0 and man_list[i-1] == 1:
-            man_list[i] = 1
-            man_list[i-1] = 0
-            a[i] -= 1
-print(i)
+    for i in range(n - 1, -2, -1):
+        if i == n - 1:
+            man_list[i] = 0
+        elif i == -1 and a[0] > 0:
+            a[0] -= 1
+            man_list[0] = 1
+        elif a[i] > 0 and man_list[i + 1] == 0 and man_list[i] == 1:
+            man_list[i+1] = 1
+            man_list[i] = 0
+            a[i+1] -= 1
+print(z)
